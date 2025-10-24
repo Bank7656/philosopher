@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 00:49:20 by thacharo          #+#    #+#             */
-/*   Updated: 2025/10/19 13:51:19 by thacharo         ###   ########.fr       */
+/*   Updated: 2025/10/20 01:27:16 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,34 @@ long long get_time_in_ms(void)
 }
 
 
-void	init_philosopher(t_table *table, t_rules *rules)
+int	init_philosopher(t_table *table, t_rules *rules)
 {
 	int				i;
-	t_philosopher	*philo;
+	int				left_fork_pos;
+	int				right_fork_pos;
+	t_philo			*philo;
 
 	i = 0;
 	philo = table -> philosopher;
-	while (i < 2)
+	while (i < rules -> number_of_philosophers)
 	{
 		philo[i].id = i + 1;
 		philo[i].eat_count = 0;
 		philo[i].last_meal_time = get_time_in_ms();
+		philo[i].rules = rules;
 		philo[i].table = table;
-		philo[i].left_fork = &table -> fork[i];
-		philo[i].right_fork = &table -> fork[(i + 1) % rules -> number_of_philosophers];
+		left_fork_pos = i;
+		right_fork_pos = (i + 1) % rules -> number_of_philosophers;
+		philo[i].left_fork = &table -> fork[left_fork_pos];
+		philo[i].right_fork = &table -> fork[right_fork_pos];
+		if (pthread_mutex_init(&philo[i].data_mutex, NULL) == -1)
+			return (-1);
 		i++;
 	}
+	return (0);
 }
 
-int	init_thread(t_philosopher *philo, t_rules *rules)
+int	init_thread(t_philo *philo, t_rules *rules)
 {
 	int			i;
 	pthread_t	*thread_id;
@@ -61,7 +69,7 @@ int	init_thread(t_philosopher *philo, t_rules *rules)
 	return (0);
 }
 
-int	wait_thread(t_philosopher *philo)
+int	wait_thread(t_philo *philo)
 {
 	int			i;
 
@@ -78,10 +86,43 @@ int	wait_thread(t_philosopher *philo)
 void	init_rules(t_rules *rules, int argc, char **argv)
 {
 	rules -> number_of_philosophers = 2;
-	rules -> time_to_die = 0;
-	rules -> time_to_eat = 0;
-	rules -> time_to_sleep = 0;
-	rules -> number_of_times_each_philosopher_must_eat = 0;
+	rules -> time_to_die = 150;
+	rules -> time_to_eat = 200;
+	rules -> time_to_sleep = 200;
+	if (argc == 5)
+		rules -> number_of_times_each_philosopher_must_eat = 0;
+	else
+		rules -> number_of_times_each_philosopher_must_eat = -1;
+}
+
+void	monitor_thread(t_table *table, t_rules *rules)
+{
+	int			i;
+	long long	waiting_time;
+
+	while (true)
+	{
+		i = 0;
+
+		while (i < rules -> number_of_philosophers)
+		{
+			pthread_mutex_lock(&table -> philosopher[i].data_mutex);
+			waiting_time = get_time_in_ms() - table -> philosopher[i].last_meal_time;
+			if (waiting_time > rules -> time_to_die)
+			{
+				pthread_mutex_lock(&table -> dining_mutex);
+				table -> is_dining = 0;
+				pthread_mutex_unlock(&table -> dining_mutex);
+				
+				pthread_mutex_lock(&table -> dead_mutex);
+				print_status(&table -> philosopher[i], rules, DYING_MSG);
+				pthread_mutex_unlock(&table -> philosopher[i].data_mutex);
+				return ;
+			}
+			pthread_mutex_unlock(&table -> philosopher[i].data_mutex);
+			i++;
+		}
+	}
 }
 
 int	main(int argc, char **argv)
@@ -100,13 +141,12 @@ int	main(int argc, char **argv)
 		clear_table(table);
 		return (EXIT_FAILURE);
 	}
-
+	monitor_thread(table, &rules);
 	if (wait_thread(table -> philosopher) == -1)	
 	{
 		clear_table(table);
 		return (EXIT_FAILURE);
 	}
 	clear_table(table);
-	
 	return (EXIT_SUCCESS);
 }

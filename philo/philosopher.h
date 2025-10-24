@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 19:46:47 by thacharo          #+#    #+#             */
-/*   Updated: 2025/10/19 13:27:31 by thacharo         ###   ########.fr       */
+/*   Updated: 2025/10/20 01:14:58 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,18 @@ typedef struct s_rules
 } t_rules;
 
 // Forward-declare the t_philosopher struct
-struct s_philosopher;
+struct s_philo;
 
 typedef struct s_table
 {
-	struct s_philosopher	*philosopher;
+	struct s_philo			*philosopher;
 	pthread_mutex_t			*fork;
+	pthread_mutex_t			dining_mutex;
+	pthread_mutex_t			dead_mutex;
 	int						is_dining;
 }	t_table;
 
-typedef struct s_philosopher
+typedef struct s_philo
 {
 	int				id;
 	pthread_t		thread_id;
@@ -76,13 +78,13 @@ typedef struct s_philosopher
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	data_mutex;
-}	t_philosopher;
-
-void	*routine(void *arg);
+}	t_philo;
 
 
-t_table	*init_table(t_rules *rules);
-void	*clear_table(t_table *table);
-long long get_time_in_ms(void);
+t_table		*init_table(t_rules *rules);
+void		*clear_table(t_table *table);
+void		*routine(void *arg);
+long long	get_time_in_ms(void);
+void		print_status(t_philo *philo, t_rules *rules, char *msg);
 
 #endif

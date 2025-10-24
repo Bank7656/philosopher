@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 08:24:52 by thacharo          #+#    #+#             */
-/*   Updated: 2025/10/19 13:23:32 by thacharo         ###   ########.fr       */
+/*   Updated: 2025/10/20 01:17:38 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@
 t_table	*init_table(t_rules *rules)
 {
 	int		i;
+	int		size;
 	t_table *table;
 	
 	table = (t_table *)malloc(sizeof(t_table));
 	if (table == NULL)
 		return (clear_table(table));
-	table -> philosopher = (t_philosopher *)malloc(sizeof(t_philosopher) * rules -> number_of_philosophers);
-	table -> fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * rules -> number_of_philosophers);
+	size = rules -> number_of_philosophers;
+	table -> philosopher = (t_philo *)malloc(sizeof(t_philo) * size);
+	table -> fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * size);
 	if (table -> philosopher == NULL || table -> fork == NULL)
 		return (clear_table(table));
 	
@@ -32,6 +34,8 @@ t_table	*init_table(t_rules *rules)
 		pthread_mutex_init(&table -> fork[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&table -> dining_mutex, NULL);
+	pthread_mutex_init(&table -> dead_mutex, NULL);
 	table -> is_dining = 1;
 	return (table);
 }
@@ -54,10 +58,17 @@ void	*clear_table(t_table *table)
 	}
 	if (table -> philosopher != NULL)
 	{
-
+		i = 0;
+		while (i < 2)
+		{
+			pthread_mutex_destroy(&table -> philosopher -> data_mutex);
+			i++;
+		}
 		free(table -> philosopher);
 	}
-	
+	pthread_mutex_destroy(&table -> dining_mutex);
+	pthread_mutex_unlock(&table -> dead_mutex);
+	pthread_mutex_destroy(&table -> dead_mutex);
 	free(table);
 	return (NULL);
 }
