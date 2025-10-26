@@ -5,7 +5,9 @@ MANDATORY_HEADER = philosopher.h
 MANDATORY_HEADER_DIR = ./
 MANDATORY_SRC = main.c \
 			table.c \
-			routine.c
+			routine.c \
+			status.c \
+			monitor.c
 MANDATORY_SRC_OBJS = $(MANDATORY_SRC:.c=.o)
 MANDATORY_OBJS_DIR = ./objects/
 MANDATORY_OBJS = $(addprefix $(MANDATORY_OBJS_DIR), $(MANDATORY_SRC_OBJS))

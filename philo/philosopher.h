@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 19:46:47 by thacharo          #+#    #+#             */
-/*   Updated: 2025/10/20 01:14:58 by thacharo         ###   ########.fr       */
+/*   Updated: 2025/10/26 13:07:04 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ typedef struct s_table
 	struct s_philo			*philosopher;
 	pthread_mutex_t			*fork;
 	pthread_mutex_t			dining_mutex;
-	pthread_mutex_t			dead_mutex;
+	pthread_mutex_t			print_mutex;
 	int						is_dining;
+	long long				starting_time;
 }	t_table;
 
 typedef struct s_philo
@@ -82,9 +83,10 @@ typedef struct s_philo
 
 
 t_table		*init_table(t_rules *rules);
-void		*clear_table(t_table *table);
+void		*clear_table(t_table *table, t_rules *rules);
 void		*routine(void *arg);
 long long	get_time_in_ms(void);
 void		print_status(t_philo *philo, t_rules *rules, char *msg);
+void	monitor_thread(t_table *table, t_rules *rules);
 
 #endif

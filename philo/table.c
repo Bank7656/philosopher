@@ -21,12 +21,12 @@ t_table	*init_table(t_rules *rules)
 	
 	table = (t_table *)malloc(sizeof(t_table));
 	if (table == NULL)
-		return (clear_table(table));
+		return (clear_table(table, rules));
 	size = rules -> number_of_philosophers;
 	table -> philosopher = (t_philo *)malloc(sizeof(t_philo) * size);
 	table -> fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * size);
 	if (table -> philosopher == NULL || table -> fork == NULL)
-		return (clear_table(table));
+		return (clear_table(table, rules));
 	
 	i = 0;
 	while (i < 2)
@@ -35,12 +35,12 @@ t_table	*init_table(t_rules *rules)
 		i++;
 	}
 	pthread_mutex_init(&table -> dining_mutex, NULL);
-	pthread_mutex_init(&table -> dead_mutex, NULL);
+	pthread_mutex_init(&table-> print_mutex, NULL);
 	table -> is_dining = 1;
 	return (table);
 }
 
-void	*clear_table(t_table *table)
+void	*clear_table(t_table *table, t_rules *rules)
 {
 	int	i;
 
@@ -49,7 +49,7 @@ void	*clear_table(t_table *table)
 	if (table -> fork != NULL)
 	{
 		i = 0;
-		while (i < 2)
+		while (i < rules -> number_of_philosophers)
 		{
 			pthread_mutex_destroy(&table -> fork[i]);
 			i++;
@@ -59,16 +59,15 @@ void	*clear_table(t_table *table)
 	if (table -> philosopher != NULL)
 	{
 		i = 0;
-		while (i < 2)
+		while (i < rules -> number_of_philosophers)
 		{
-			pthread_mutex_destroy(&table -> philosopher -> data_mutex);
+			pthread_mutex_destroy(&table -> philosopher[i].data_mutex);
 			i++;
 		}
 		free(table -> philosopher);
 	}
+	pthread_mutex_destroy(&table -> print_mutex);
 	pthread_mutex_destroy(&table -> dining_mutex);
-	pthread_mutex_unlock(&table -> dead_mutex);
-	pthread_mutex_destroy(&table -> dead_mutex);
 	free(table);
 	return (NULL);
 }
