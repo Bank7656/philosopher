@@ -18,7 +18,8 @@ int		check_number(char *arg);
 t_data	*data_init(int argc, char **argv);
 void	clear_data(t_data *data);
 void	*routine(void *arg);
-t_philo	*thread_init(t_data *data);
+t_philo	*philos_init(t_data *data, int n);
+int	thread_init(t_philo *philos, int n);
 
 int	main(int argc, char **argv)
 {
@@ -31,37 +32,60 @@ int	main(int argc, char **argv)
 	if (!check_input(argv + 1))
 		return (1);
 	data = data_init(argc, argv);
-	data -> philos = thread_init(data);
+	data -> philos = philos_init(data, data -> num_philo);
+	if (thread_init(data -> philos, data -> num_philo))
+		return (1);
 	usleep(50000);
 	clear_data(data);
 	return (0);
 }
 
-t_philo	*thread_init(t_data *data)
+int	thread_init(t_philo *philos, int n)
 {
-	int		n;
-	int		i;
-	t_philo *philos;
-	pthread_t		thread_id;
+	int	i;
+	pthread_t	thread_id;
 
 	i = 0;
-	n = data -> num_philo;
+	while (i < n)
+	{
+
+		thread_id = (&philos[i]) -> thread_id;
+		if (pthread_create(&thread_id, NULL, &routine, &philos[i]) != 0)
+		{
+			return (1);
+		}
+		if (pthread_detach(thread_id) != 0)
+		{
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+
+
+t_philo	*philos_init(t_data *data, int n)
+{
+	int		i;
+	int		left_fork_pos;
+	int		right_fork_pos;
+	t_philo *philos;
+
+	i = 0;
 	philos = (t_philo *)malloc(sizeof(t_philo) * n);
 	if (!philos)
 		return (NULL);
 	while (i < n)
 	{
-		thread_id = (&philos[i]) -> thread_id;
-		if (pthread_create(&thread_id, NULL, &routine, &philos[i]) != 0)
-		{
-			free(philos);
-			return (NULL);
-		}
-		if (pthread_detach(thread_id) != 0)
-		{
-			free(philos);
-			return (NULL);
-		}
+		philos[i].id = i + 1;
+		philos[i].meals_eaten = 0;
+		philos[i].last_meal_time = 0; // Need to do this
+		philos[i].data = data;
+		left_fork_pos = i;
+		right_fork_pos = (i + 1) % n;
+		philos[i].left_fork = &data -> forks[left_fork_pos];
+		philos[i].right_fork = &data -> forks[right_fork_pos];
 		i++;
 	}
 	return (philos);
