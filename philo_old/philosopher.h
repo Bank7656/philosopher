@@ -5,13 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/20 18:04:42 by thacharo          #+#    #+#             */
-/*   Updated: 2026/02/20 19:53:10 by thacharo         ###   ########.fr       */
+/*   Created: 2025/07/04 19:46:47 by thacharo          #+#    #+#             */
+/*   Updated: 2025/10/26 13:07:04 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHER_H
 # define PHILOSOPHER_H
+# define EXIT_SUCCESS 0
+# define EXIT_FAILURE 1
 # define SEC_TO_USEC 1000000
 # define MSEC_TO_USEC 100
 # define PICKING_MSG "has taken a fork"
@@ -19,6 +21,10 @@
 # define SLEEPING_MSG "is sleeping"
 # define THINKING_MSG "is thinking"
 # define DYING_MSG "is died"
+
+# define RED "\e[31m"
+# define GREEN "\e[32m"
+# define ENDCOLOR "\e[0m"
 
 /* 
 	pthread_create, pthread_detach, pthread_join
@@ -40,38 +46,47 @@
 /* INT_MAX INT_MIN */
 # include <limits.h>
 
-typedef struct s_data t_data;
+typedef struct s_rules
+{
+	int	number_of_philosophers;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	number_of_times_each_philosopher_must_eat;
+} t_rules;
+
+// Forward-declare the t_philosopher struct
+struct s_philo;
+
+typedef struct s_table
+{
+	struct s_philo			*philosopher;
+	pthread_mutex_t			*fork;
+	pthread_mutex_t			dining_mutex;
+	pthread_mutex_t			print_mutex;
+	int						is_dining;
+	long long				starting_time;
+}	t_table;
 
 typedef struct s_philo
 {
 	int				id;
-	int				meals_eaten;
+	pthread_t		thread_id;
+	int				eat_count;
 	long long		last_meal_time;
-	pthread_mutex_t meal_mutex;
+	t_rules			*rules;
+	t_table			*table;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_t		thread_id;
-	t_data			*data;	
-} t_philo;
+	pthread_mutex_t	data_mutex;
+}	t_philo;
 
-typedef struct s_data
-{
-	int				num_philo;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				must_eat_count;
-	int				is_dining;
-	long long		start_time;
-	pthread_mutex_t	write_mutex;
-	pthread_mutex_t	stop_mutex;
-	
-	pthread_mutex_t	*forks;
-	t_philo			*philos;
-}	t_data;
 
-int	ft_isdigit(int c);
-int	ft_atoi(const char *nptr);
-long long get_time_in_ms(void);
+t_table		*init_table(t_rules *rules);
+void		*clear_table(t_table *table, t_rules *rules);
+void		*routine(void *arg);
+long long	get_time_in_ms(void);
+void		print_status(t_philo *philo, t_rules *rules, char *msg);
+void	monitor_thread(t_table *table, t_rules *rules);
 
 #endif

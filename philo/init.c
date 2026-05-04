@@ -45,7 +45,9 @@ t_data	*data_init(int argc, char **argv)
 	data -> time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		data -> must_eat_count = ft_atoi(argv[5]);
-
+	else
+		data -> must_eat_count = -1;
+	data -> is_dining = 1;
 	data -> forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * (data -> num_philo));
 	if (!data -> forks)
 	{

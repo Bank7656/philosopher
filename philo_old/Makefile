@@ -1,13 +1,9 @@
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
 
 MANDATORY_HEADER = philosopher.h
 MANDATORY_HEADER_DIR = ./
 MANDATORY_SRC = main.c \
-				init.c \
-				utils.c \
-				ft_atoi.c \
-				ft_isdigit.c
 
 MANDATORY_SRC_OBJS = $(MANDATORY_SRC:.c=.o)
 MANDATORY_OBJS_DIR = ./objects/
@@ -22,10 +18,10 @@ HEADER_DIR = $(MANDATORY_HEADER_DIR)
 
 all: $(NAME)
 
-$(NAME): $(OBJ_DIR) $(OBJS) $(HEADER)
+$(NAME): $(OBJS) $(HEADER)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-$(OBJ_DIR)%.o:%.c 
+$(OBJ_DIR)%.o:%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -I $(HEADER_DIR) -c $< -o $@
 
 $(OBJ_DIR):
