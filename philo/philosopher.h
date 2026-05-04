@@ -60,8 +60,14 @@ int			init_philos(t_data *data);
 void    	*routine(void *args);
 void		clear_resource(t_data *data);
 
+void		set_death_flag(t_data *data);
+int			get_death_flag(t_data *data);
+
 int			ft_atoi(const char *nptr);
 int			ft_isdigit(int c);
+void		ft_usleep(long time_in_ms, t_data *data);
 long long	get_time_in_ms(void);
+
+void		print_status(t_philo *philo, char *msg);
 
 # endif

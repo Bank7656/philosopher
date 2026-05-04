@@ -47,7 +47,7 @@ int	dining_philosopher(t_data *data)
 		thread_id = &data->philos[i].thread_id;
 		if (pthread_create(thread_id, NULL, &routine, &data->philos[i]) != 0)
 		{
-			// set_death_flag();
+			set_death_flag(data);
 			while (--i >= 0)
 				pthread_join(data->philos[i].thread_id, NULL);
 			return (EXIT_FAILURE);

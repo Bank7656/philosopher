@@ -8,6 +8,7 @@ MANDATORY_SRC = main.c \
 				init.c \
 				routine.c \
 				status.c \
+				print.c \
 				utils.c \
 				clear.c \
 
