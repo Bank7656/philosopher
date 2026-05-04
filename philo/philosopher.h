@@ -40,9 +40,14 @@ typedef struct s_data
     t_philo         *philos;       /* Array of philosopher structures */
 }	t_data;
 
-int parse_args(t_data *data, char **argv);
+int     parse_args(t_data *data, char **argv);
+int     init_mutexes(t_data *data);
+int     init_fork(t_data *data);
+int     init_philos(t_data *data);
 
-int	ft_atoi(const char *nptr);
-int	ft_isdigit(int c);
+void    clear_resource(t_data *data);
+
+int	    ft_atoi(const char *nptr);
+int	    ft_isdigit(int c);
 
 # endif

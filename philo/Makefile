@@ -5,6 +5,8 @@ MANDATORY_HEADER = philosopher.h
 MANDATORY_HEADER_DIR = ./
 MANDATORY_SRC = main.c \
 				parse.c \
+				init.c \
+				clear.c \
 				ft_isdigit.c \
 				ft_atoi.c
 
