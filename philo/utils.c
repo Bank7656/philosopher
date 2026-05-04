@@ -1,18 +1,23 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/25 16:05:00 by thacharo          #+#    #+#             */
-/*   Updated: 2026/02/20 19:03:00 by thacharo         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosopher.h"
 
 static int	ft_atoi_number(const char *str, int sign);
+
+long long get_time_in_ms(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) != 0)
+		return (-1);
+	
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= 48 && c <= 57)
+		return (1);
+	return (0);
+}
 
 int	ft_atoi(const char *nptr)
 {

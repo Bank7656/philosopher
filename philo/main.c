@@ -6,28 +6,58 @@ int	main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 	{
-		printf("Error: Invalid number of arguments.\n");
-        printf("Usage: ./philo philos time_die time_eat time_sleep [meals]\n");
+		printf(ERR_NUM_ARGS);
 		return (EXIT_FAILURE);
 	}
 	if (parse_args(&data, argv))
 	{
-		printf("Error: Invalid argument values provided.\n");
+		printf(ERR_INVALID_ARGS);
 		return (EXIT_FAILURE);
 	}
 	if (init_mutexes(&data) != 0 || init_fork(&data) != 0)
 	{
-		printf("Error: Failed to initialize philosophers.\n");
+		printf(ERR_INIT);
 		clear_resource(&data);
 		return (EXIT_FAILURE);
 	}
 	if (init_philos(&data) != 0)
 	{
-		printf("Error: Failed to initialize philosophers.\n");
+		printf(ERR_INIT);
 		clear_resource(&data);
 		return (EXIT_FAILURE);
 	}
-	printf("Hello Test\n");
+	if (dining_philosopher(&data))
+	{
+		return (EXIT_FAILURE);
+	}
+	clear_resource(&data);
+	return (EXIT_SUCCESS);
+}
+
+int	dining_philosopher(t_data *data)
+{
+	int			i;
+	pthread_t	*thread_id;
+
+	i = 0;
+	data->start_time = get_time_in_ms();
+	while (i < data->num_philos)
+	{
+		data->philos[i].last_meal_time = data->start_time;
+		thread_id = &data->philos[i].thread_id;
+		if (pthread_create(thread_id, NULL, &routine, &data->philos[i]) != 0)
+		{
+			// set_death_flag();
+			while (--i >= 0)
+				pthread_join(data->philos[i].thread_id, NULL);
+			return (EXIT_FAILURE);
+		}
+		i++;
+	}
+	// monitor_routine();
+	i = -1;
+	while (++i < data->num_philos)
+		pthread_join(data->philos[i].thread_id, NULL);
 	return (EXIT_SUCCESS);
 }
 

@@ -53,7 +53,7 @@ int init_philos(t_data *data)
     {
         data->philos[i].id = i + 1;
         data->philos[i].meals_eaten = 0;
-        data->philos[i].last_meal_time = 0; // Need to update time
+        data->philos[i].last_meal_time = get_time_in_ms();
         data->philos[i].data = data;
         if (pthread_mutex_init(&data->philos[i].meal_lock, NULL) != 0)
             return (EXIT_FAILURE);

@@ -6,9 +6,10 @@ MANDATORY_HEADER_DIR = ./
 MANDATORY_SRC = main.c \
 				parse.c \
 				init.c \
+				routine.c \
+				status.c \
+				utils.c \
 				clear.c \
-				ft_isdigit.c \
-				ft_atoi.c
 
 MANDATORY_SRC_OBJS = $(MANDATORY_SRC:.c=.o)
 MANDATORY_OBJS_DIR = ./objects/
