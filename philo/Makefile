@@ -4,10 +4,9 @@ CFLAGS = -g -Wall -Wextra -Werror
 MANDATORY_HEADER = philosopher.h
 MANDATORY_HEADER_DIR = ./
 MANDATORY_SRC = main.c \
-				init.c \
-				utils.c \
-				ft_atoi.c \
-				ft_isdigit.c
+				parse.c \
+				ft_isdigit.c \
+				ft_atoi.c
 
 MANDATORY_SRC_OBJS = $(MANDATORY_SRC:.c=.o)
 MANDATORY_OBJS_DIR = ./objects/
