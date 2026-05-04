@@ -68,6 +68,7 @@ int			ft_isdigit(int c);
 void		ft_usleep(long time_in_ms, t_data *data);
 long long	get_time_in_ms(void);
 
+void		monitor_routine(t_data *data);
 void		print_status(t_philo *philo, char *msg);
 
 # endif
