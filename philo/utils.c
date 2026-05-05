@@ -1,14 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/06 00:59:50 by thacharo          #+#    #+#             */
+/*   Updated: 2026/05/06 00:59:50 by thacharo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 static int	ft_atoi_number(const char *str, int sign);
 
-long long get_time_in_ms(void)
+long long	get_time_in_ms(void)
 {
 	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL) != 0)
 		return (-1);
-	
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
@@ -17,10 +28,10 @@ void	ft_usleep(long time_in_ms, t_data *data)
 	long long	start_time;
 
 	start_time = get_time_in_ms();
-	while((get_time_in_ms() - start_time) < time_in_ms)
+	while ((get_time_in_ms() - start_time) < time_in_ms)
 	{
 		if (get_death_flag(data))
-			break;
+			break ;
 		usleep(500);
 	}
 }

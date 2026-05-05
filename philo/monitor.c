@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitor.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/06 01:02:43 by thacharo          #+#    #+#             */
+/*   Updated: 2026/05/06 01:02:44 by thacharo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 static int	all_philos_full(t_data *data);
@@ -11,7 +23,7 @@ void	monitor_routine(t_data *data)
 	while (true)
 	{
 		i = 0;
-		while(i < data->num_philos)
+		while (i < data->num_philos)
 		{
 			if (is_philo_died(&data->philos[i]) == 1)
 			{
@@ -23,7 +35,7 @@ void	monitor_routine(t_data *data)
 		if (all_philos_full(data))
 		{
 			set_death_flag(data);
-			return;
+			return ;
 		}
 		usleep(1000);
 	}
@@ -53,13 +65,16 @@ static int	all_philos_full(t_data *data)
 
 static void	report_death(t_philo *philo)
 {
+	long long	death_timestamp;
+
 	pthread_mutex_lock(&philo->data->write_lock);
 	if (get_death_flag(philo->data) == 0)
 	{
 		pthread_mutex_lock(&philo->data->dead_lock);
 		philo->data->is_dead = 1;
 		pthread_mutex_unlock(&philo->data->dead_lock);
-		printf("%lld %d died\n", get_time_in_ms() - philo->data->start_time, philo->id);
+		death_timestamp = get_time_in_ms() - philo->data->start_time;
+		printf("%lld %d died\n", death_timestamp, philo->id);
 	}
 	pthread_mutex_unlock(&philo->data->write_lock);
 }

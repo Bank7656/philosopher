@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/06 01:03:40 by thacharo          #+#    #+#             */
+/*   Updated: 2026/05/06 01:04:45 by thacharo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 int	main(int argc, char **argv)
@@ -14,13 +26,7 @@ int	main(int argc, char **argv)
 		printf(ERR_INVALID_ARGS);
 		return (EXIT_FAILURE);
 	}
-	if (init_mutexes(&data) != 0 || init_fork(&data) != 0)
-	{
-		printf(ERR_INIT);
-		clear_resource(&data);
-		return (EXIT_FAILURE);
-	}
-	if (init_philos(&data) != 0)
+	if (init_mutexes(&data) || init_fork(&data) || init_philos(&data))
 	{
 		printf(ERR_INIT);
 		clear_resource(&data);
