@@ -2,6 +2,7 @@
 
 static void	picking_fork(t_philo *philo);
 static void	release_fork(t_philo *philo);
+static void	eating(t_philo *philo);
 
 void    *routine(void *args)
 {
@@ -21,12 +22,7 @@ void    *routine(void *args)
     while (!get_death_flag(philo->data))
 	{
         picking_fork(philo);
-        print_status(philo, EATING_MSG);
-        pthread_mutex_lock(&philo->meal_lock);
-        philo->last_meal_time = get_time_in_ms();
-        philo->meals_eaten++;
-        pthread_mutex_unlock(&philo->meal_lock);
-        ft_usleep(philo->data->time_to_eat, philo->data);
+		eating(philo);
         release_fork(philo);
         print_status(philo, SLEEPING_MSG);
         ft_usleep(philo->data->time_to_sleep, philo->data);
@@ -35,6 +31,16 @@ void    *routine(void *args)
             ft_usleep(1, philo->data);
     }
     return (NULL);
+}
+
+static void	eating(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->meal_lock);
+	philo->last_meal_time = get_time_in_ms();
+	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->meal_lock);
+	print_status(philo, EATING_MSG);
+	ft_usleep(philo->data->time_to_eat, philo->data);
 }
 
 static void	picking_fork(t_philo *philo)

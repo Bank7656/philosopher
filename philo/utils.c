@@ -21,7 +21,7 @@ void	ft_usleep(long time_in_ms, t_data *data)
 	{
 		if (get_death_flag(data))
 			break;
-		usleep(100);
+		usleep(500);
 	}
 }
 
