@@ -1,0 +1,79 @@
+#include "philosopher.h"
+
+static int	all_philos_full(t_data *data);
+static void	report_death(t_philo *philo);
+static int	is_philo_died(t_philo *philo);
+
+void	monitor_routine(t_data *data)
+{
+	int	i;
+
+	while (true)
+	{
+		i = 0;
+		while(i < data->num_philos)
+		{
+			if (is_philo_died(&data->philos[i]))
+			{
+				report_death(&data->philos[i]);
+				return ;
+			}
+			i++;
+		}
+		if (all_philos_full(data))
+		{
+			pthread_mutex_lock(&data->dead_lock);
+			data->is_dead = 1;
+			pthread_mutex_unlock(&data->dead_lock);
+			return;
+		}
+		ft_usleep(1000, data);
+	}
+}
+
+static int	all_philos_full(t_data *data)
+{
+	int	i;
+	int	finish_eating_count;
+
+	if (data->max_meals == -1)
+		return (0);
+	i = 0;
+	finish_eating_count = 0;
+	while (i < data->num_philos)
+	{
+		pthread_mutex_lock(&data->philos[i].meal_lock);
+		if (data->philos[i].meals_eaten >= data->max_meals)
+			finish_eating_count++;
+		pthread_mutex_unlock(&data->philos[i].meal_lock);
+		i++;
+	}
+	if (finish_eating_count == data->num_philos)
+		return (1);
+	return (0);
+}
+
+static void	report_death(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->data->write_lock);
+	if (get_death_flag(philo->data) == 0)
+	{
+		pthread_mutex_lock(&philo->data->dead_lock);
+		philo->data->is_dead = 1;
+		pthread_mutex_unlock(&philo->data->dead_lock);
+		printf("%lld %d is died\n", get_time_in_ms() - philo->data->start_time, philo->id);
+	}
+	pthread_mutex_unlock(&philo->data->write_lock);
+}
+
+static int	is_philo_died(t_philo *philo)
+{
+	long long	time_elasped;
+
+	pthread_mutex_lock(&philo->meal_lock);
+	time_elasped = get_time_in_ms() - philo->last_meal_time;
+	pthread_mutex_unlock(&philo->meal_lock);
+	if (time_elasped >= philo->data->time_to_die)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}

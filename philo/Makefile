@@ -7,6 +7,7 @@ MANDATORY_SRC = main.c \
 				parse.c \
 				init.c \
 				routine.c \
+				monitor.c \
 				status.c \
 				print.c \
 				utils.c \
