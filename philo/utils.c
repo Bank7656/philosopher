@@ -14,7 +14,7 @@ long long get_time_in_ms(void)
 
 void	ft_usleep(long time_in_ms, t_data *data)
 {
-	long	start_time;
+	long long	start_time;
 
 	start_time = get_time_in_ms();
 	while((get_time_in_ms() - start_time) < time_in_ms)

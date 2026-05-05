@@ -8,8 +8,18 @@ void    *routine(void *args)
     t_philo *philo;
 
     philo = (t_philo *)args;
+	if (philo->data->num_philos == 1)
+	{
+		pthread_mutex_lock(philo->left_fork);
+		print_status(philo, PICKING_MSG);
+		ft_usleep(philo->data->time_to_die, philo->data);
+		pthread_mutex_unlock(philo->left_fork);
+		return (NULL);
+	}
+	if (philo->id % 2 == 0)
+        ft_usleep(philo->data->time_to_eat / 2, philo->data);
     while (!get_death_flag(philo->data))
-    {
+	{
         picking_fork(philo);
         print_status(philo, EATING_MSG);
         pthread_mutex_lock(&philo->meal_lock);
@@ -21,6 +31,8 @@ void    *routine(void *args)
         print_status(philo, SLEEPING_MSG);
         ft_usleep(philo->data->time_to_sleep, philo->data);
         print_status(philo, THINKING_MSG);
+		if (philo->data->num_philos % 2 != 0)
+            ft_usleep(1, philo->data);
     }
     return (NULL);
 }

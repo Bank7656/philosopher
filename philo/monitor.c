@@ -13,7 +13,7 @@ void	monitor_routine(t_data *data)
 		i = 0;
 		while(i < data->num_philos)
 		{
-			if (is_philo_died(&data->philos[i]))
+			if (is_philo_died(&data->philos[i]) == 1)
 			{
 				report_death(&data->philos[i]);
 				return ;
@@ -22,12 +22,10 @@ void	monitor_routine(t_data *data)
 		}
 		if (all_philos_full(data))
 		{
-			pthread_mutex_lock(&data->dead_lock);
-			data->is_dead = 1;
-			pthread_mutex_unlock(&data->dead_lock);
+			set_death_flag(data);
 			return;
 		}
-		ft_usleep(1000, data);
+		usleep(1000);
 	}
 }
 
@@ -61,7 +59,7 @@ static void	report_death(t_philo *philo)
 		pthread_mutex_lock(&philo->data->dead_lock);
 		philo->data->is_dead = 1;
 		pthread_mutex_unlock(&philo->data->dead_lock);
-		printf("%lld %d is died\n", get_time_in_ms() - philo->data->start_time, philo->id);
+		printf("%lld %d died\n", get_time_in_ms() - philo->data->start_time, philo->id);
 	}
 	pthread_mutex_unlock(&philo->data->write_lock);
 }
@@ -74,6 +72,6 @@ static int	is_philo_died(t_philo *philo)
 	time_elasped = get_time_in_ms() - philo->last_meal_time;
 	pthread_mutex_unlock(&philo->meal_lock);
 	if (time_elasped >= philo->data->time_to_die)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		return (1);
+	return (0);
 }
