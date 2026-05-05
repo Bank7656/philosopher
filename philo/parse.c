@@ -1,6 +1,7 @@
 #include "philosopher.h"
 
 static int check_args_digit(char **argv);
+static int check_input_limits(t_data *data, char **argv);
 
 int parse_args(t_data *data, char **argv)
 {
@@ -15,7 +16,9 @@ int parse_args(t_data *data, char **argv)
     else
         data->max_meals = -1;
     data->is_dead = 0;
-    return (EXIT_SUCCESS);
+    if (check_input_limits(data, argv))
+        return (1);
+    return (0);
 }
 
 static int check_args_digit(char **argv)
@@ -30,10 +33,25 @@ static int check_args_digit(char **argv)
         while (argv[i][j] != '\0')
         {
             if (!ft_isdigit(argv[i][j]))
-                return (EXIT_FAILURE);
+                return (1);
             j++;
         }
         i++;
     }
-    return (EXIT_SUCCESS);
+    return (0);
+}
+
+static int check_input_limits(t_data *data, char **argv)
+{
+    if (data->num_philos <= 0)
+        return (1);
+    if (data->time_to_die <= 0)
+        return (1);
+    if (data->time_to_eat <= 0)
+        return (1);
+    if (data->time_to_sleep <= 0)
+        return (1);
+    if (argv[5] != NULL && data->max_meals <= 0)
+        return (1);
+    return (0);
 }
