@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 01:09:17 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/06 01:09:34 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/05/06 13:34:13 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 # define EXIT_SUCCESS		0
 # define EXIT_FAILURE		1
-# define SEC_TO_USEC		1000000
-# define MSEC_TO_USEC		100
 
 # define PICKING_MSG		"has taken a fork"
 # define EATING_MSG			"is eating"
