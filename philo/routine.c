@@ -31,7 +31,7 @@ void	*routine(void *args)
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		ft_usleep(philo->data->time_to_eat / 2, philo->data);
+		ft_usleep(philo->data->time_to_eat / 10, philo->data);
 	while (!get_death_flag(philo->data))
 	{
 		picking_fork(philo);
@@ -46,12 +46,31 @@ void	*routine(void *args)
 
 static void	thinking(t_philo *philo)
 {
-	long long	time_to_think;
+	long long	time_to_eat;
+	long long	time_to_sleep;
+	long long	think_time;
 
-	time_to_think = philo->data->time_to_die - philo->data->time_to_eat;
-	print_status(philo, THINKING_MSG);
-	if (philo->data->num_philos % 2 != 0)
-		ft_usleep(time_to_think, philo->data);
+	think_time = 0;
+	time_to_eat = philo->data->time_to_eat;
+	time_to_sleep = philo->data->time_to_sleep;
+	print_status(philo, "is thinking");
+	if (philo->data->num_philos % 2 == 0)
+	{
+		if (time_to_eat > time_to_sleep)
+			think_time = time_to_eat - time_to_sleep;
+	}
+	else
+		think_time = (time_to_eat * 2) - time_to_sleep;
+	if (think_time > 5)
+		think_time -= 5;
+	else
+		think_time = 0;
+	if (think_time > 0)
+	{
+		if (think_time > philo->data->time_to_die / 2)
+			think_time = philo->data->time_to_die / 2;
+		ft_usleep(think_time, philo->data);
+	}
 }
 
 static void	eating(t_philo *philo)
@@ -66,7 +85,7 @@ static void	eating(t_philo *philo)
 
 static void	picking_fork(t_philo *philo)
 {
-	if (philo->id % 2 != 0)
+	if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_lock(philo -> left_fork);
 		print_status(philo, PICKING_MSG);
@@ -85,7 +104,7 @@ static void	picking_fork(t_philo *philo)
 
 static void	release_fork(t_philo *philo)
 {
-	if (philo->id % 2 != 0)
+	if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);

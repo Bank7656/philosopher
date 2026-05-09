@@ -86,7 +86,7 @@ static int	is_philo_died(t_philo *philo)
 	pthread_mutex_lock(&philo->meal_lock);
 	time_elasped = get_time_in_ms() - philo->last_meal_time;
 	pthread_mutex_unlock(&philo->meal_lock);
-	if (time_elasped >= philo->data->time_to_die)
+	if (time_elasped > philo->data->time_to_die)
 		return (1);
 	return (0);
 }
