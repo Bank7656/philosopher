@@ -15,6 +15,7 @@
 static void	picking_fork(t_philo *philo);
 static void	release_fork(t_philo *philo);
 static void	eating(t_philo *philo);
+static void	thinking(t_philo *philo);
 
 void	*routine(void *args)
 {
@@ -38,11 +39,19 @@ void	*routine(void *args)
 		release_fork(philo);
 		print_status(philo, SLEEPING_MSG);
 		ft_usleep(philo->data->time_to_sleep, philo->data);
-		print_status(philo, THINKING_MSG);
-		if (philo->data->num_philos % 2 != 0)
-			ft_usleep(1, philo->data);
+		thinking(philo);
 	}
 	return (NULL);
+}
+
+static void	thinking(t_philo *philo)
+{
+	long long	time_to_think;
+
+	time_to_think = philo->data->time_to_die - philo->data->time_to_eat;
+	print_status(philo, THINKING_MSG);
+	if (philo->data->num_philos % 2 != 0)
+		ft_usleep(time_to_think, philo->data);
 }
 
 static void	eating(t_philo *philo)
