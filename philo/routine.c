@@ -44,6 +44,21 @@ void	*routine(void *args)
 	return (NULL);
 }
 
+/*
+** Calculates dynamic delay to synchronize threads and prevent deadlocks.
+**
+** 1. Shift Rotation (Reason: Prevents holding single forks hostage)
+** - Even: Thinks for (eat - sleep) to yield to the other half of the table.
+** - Odd: Thinks for (eat * 2 - sleep) to yield to BOTH neighboring shifts.
+**
+** 2. Drift Mitigation (Reason: Eliminates OS context-switch lag)
+** - Subtracts 5ms to wake up early and wait directly in the mutex queue,
+** guaranteeing instant lock acquisition the millisecond forks drop.
+**
+** 3. Safety Cap (Reason: Survives the strict 10ms death limit)
+** - Caps sleep at (die / 2) so a thread never gets trapped in a massive
+** sleep cycle and misses reporting its own starvation.
+*/
 static void	thinking(t_philo *philo)
 {
 	long long	time_to_eat;
