@@ -4,6 +4,10 @@ CFLAGS = -Wall -Wextra -Werror
 MANDATORY_HEADER = philosopher_bonus.h
 MANDATORY_HEADER_DIR = ./
 MANDATORY_SRC = main_bonus.c \
+				parse_bonus.c \
+				init_bonus.c \
+				utils_bonus.c \
+				clear_bonus.c
 
 MANDATORY_SRC_OBJS = $(MANDATORY_SRC:.c=.o)
 MANDATORY_OBJS_DIR = ./objects/

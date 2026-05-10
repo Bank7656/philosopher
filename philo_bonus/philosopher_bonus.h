@@ -16,6 +16,9 @@
 # define EXIT_SUCCESS		0
 # define EXIT_FAILURE		1
 
+# define FORK_SEM_NAME		"/fork_sem"
+# define PRINT_SEM_NAME		"/print_sem"
+# define MEAL_SEM_NAME		"/meal_sem"
 # define PICKING_MSG		"has taken a fork"
 # define EATING_MSG			"is eating"
 # define SLEEPING_MSG		"is sleeping"
@@ -37,6 +40,39 @@
 # include <fcntl.h>
 # include <unistd.h>
 
+struct	s_data;
+
+typedef struct s_philo
+{
+	int				id;
+	pid_t			pid;
+	int				meals_eaten;
+	long long		last_meal_time;
+	pthread_t		thread_id;
+	struct s_data	*data;
+}	t_philo;
+
+typedef struct s_data
+{
+	int				num_philos;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				max_meals;
+	long long		start_time;
+	sem_t			*forks_sem;
+	sem_t			*print_sem;
+	sem_t			*meal_sem;
+	t_philo			*philos;
+}   t_data;
+
+
+int			parse_args(t_data *data, char **argv);
+int			init_semaphore(t_data *data);
+int			init_philos(t_data *data);
+int			dining_philosopher(t_data *data);
+void		clear_resource(t_data *data);
+void		kill_all_child(t_data *data);
 
 int			ft_atoi(const char *nptr);
 int			ft_isdigit(int c);

@@ -2,40 +2,78 @@
 
 int main(int argc, char *argv[])
 {
-    (void)argc;
-    (void)argv;
-    sem_t   *my_sem;
-    pid_t   pid;
-    int     status;
-    int     timeout = 2;
+	t_data  data;
 
-    my_sem = sem_open("/watchdog_sem", O_CREAT, 0644, 1);
-    pid = fork();
-    if (pid == 0)
-    {
-        printf("Child: Attempt to lock semaphore\n");
-        sem_wait(my_sem);
-        printf("Child: semaphore is lock\n");
-        while (1)
-            sleep(1);
-        sem_post(my_sem);
-        printf("Child: semaphore is unlock\n");
-    }
-    else
-    {
-        sleep(timeout);
-        if (waitpid(pid, &status, WNOHANG) == 0)
-        {
-            printf("Child stuct\n");
-            kill(pid, SIGKILL);
-            waitpid(pid, &status, 0);
-            printf("Child Terminated\n");
-            sem_post(my_sem);
-        }
-        else
-            printf("Child finished\n");
-    }
-    sem_close(my_sem);
-    sem_unlink("/watchdog_sem");
-    return (0);
+	if (argc < 5 || argc > 6)
+	{
+		printf(ERR_NUM_ARGS);
+		return (EXIT_FAILURE);
+	}
+	if (parse_args(&data, argv))
+	{
+		printf(ERR_INVALID_ARGS);
+		return (EXIT_FAILURE);
+	}
+	if (init_semaphore(&data) || init_philos(&data))
+	{
+		printf(ERR_INIT);
+		clear_resource(&data);
+		return (EXIT_FAILURE);
+	}
+	if (dining_philosopher(&data))
+	{
+		clear_resource(&data);
+		return (EXIT_FAILURE);
+	}	
+	clear_resource(&data);
+	return (EXIT_SUCCESS);
+}
+
+int	dining_philosopher(t_data *data)
+{
+	int		i;
+	int		j;
+	t_philo	*philos;
+
+	i = -1;
+	j = -1;
+	philos = data->philos;
+	while (++i < data->num_philos)
+	{
+		philos[i].pid = fork();
+		if (philos[i].pid < 0)
+		{
+			while (++j < i)
+				kill(philos[i].pid, SIGKILL);
+			return (EXIT_FAILURE);
+		}
+		if (philos[i].pid == 0)
+		{
+			philos[i].last_meal_time = get_time_in_ms();
+			// routine(&philos[i]);
+			exit(EXIT_SUCCESS);
+		}
+	}
+	return (EXIT_SUCCESS);
+}
+
+void	wait_all_child(t_data *data)
+{
+	int	i;
+	int	status;
+
+	i = 0;
+	while (i < data->num_philos)
+	{
+		waitpid(-1, &status, 0);
+		if (WIFEXITED(status))
+		{
+			if (WEXITSTATUS(status) == 1)
+			{
+				kill_all_child(data);
+				break;
+			}
+		}
+		i++;
+	}
 }
