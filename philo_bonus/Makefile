@@ -1,11 +1,13 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 MANDATORY_HEADER = philosopher_bonus.h
 MANDATORY_HEADER_DIR = ./
 MANDATORY_SRC = main_bonus.c \
 				parse_bonus.c \
 				init_bonus.c \
+				routine_bonus.c \
+				print_bonus.c \
 				utils_bonus.c \
 				clear_bonus.c
 

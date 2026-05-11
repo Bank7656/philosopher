@@ -23,18 +23,19 @@ long long	get_time_in_ms(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-// void	ft_usleep(long time_in_ms, t_data *data)
-// {
-// 	long long	start_time;
+void	ft_usleep(long time_in_ms, t_data *data)
+{
+	long long	start_time;
 
-// 	start_time = get_time_in_ms();
-// 	while ((get_time_in_ms() - start_time) < time_in_ms)
-// 	{
-// 		if (get_death_flag(data))
-// 			break ;
-// 		usleep(500);
-// 	}
-// }
+	(void)data;
+	start_time = get_time_in_ms();
+	while ((get_time_in_ms() - start_time) < time_in_ms)
+	{
+		// if (get_death_flag(data))
+		// 	break ;
+		usleep(500);
+	}
+}
 
 int	ft_isdigit(int c)
 {

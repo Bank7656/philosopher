@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 		printf(ERR_INVALID_ARGS);
 		return (EXIT_FAILURE);
 	}
-	if (init_semaphore(&data) || init_philos(&data))
+	if (init_philos(&data) || init_semaphore(&data))
 	{
 		printf(ERR_INIT);
 		clear_resource(&data);
@@ -38,6 +38,7 @@ int	dining_philosopher(t_data *data)
 	i = -1;
 	j = -1;
 	philos = data->philos;
+	data->start_time = get_time_in_ms();
 	while (++i < data->num_philos)
 	{
 		philos[i].pid = fork();
@@ -50,7 +51,7 @@ int	dining_philosopher(t_data *data)
 		if (philos[i].pid == 0)
 		{
 			philos[i].last_meal_time = get_time_in_ms();
-			// routine(&philos[i]);
+			philosopher(&philos[i]);
 			exit(EXIT_SUCCESS);
 		}
 	}

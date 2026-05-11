@@ -73,10 +73,12 @@ int			init_philos(t_data *data);
 int			dining_philosopher(t_data *data);
 void		clear_resource(t_data *data);
 void		kill_all_child(t_data *data);
+void		philosopher(t_philo *philo);
+void		print_status(t_philo *philo, char *msg);
 
 int			ft_atoi(const char *nptr);
 int			ft_isdigit(int c);
-// void		ft_usleep(long time_in_ms, t_data *data);
+void		ft_usleep(long time_in_ms, t_data *data);
 long long	get_time_in_ms(void);
 
 #endif
