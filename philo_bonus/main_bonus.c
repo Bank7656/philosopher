@@ -1,5 +1,7 @@
 #include "philosopher_bonus.h"
 
+void	wait_all_child(t_data *data);
+
 int main(int argc, char *argv[])
 {
 	t_data  data;
@@ -24,7 +26,8 @@ int main(int argc, char *argv[])
 	{
 		clear_resource(&data);
 		return (EXIT_FAILURE);
-	}	
+	}
+	wait_all_child(&data);
 	clear_resource(&data);
 	return (EXIT_SUCCESS);
 }
@@ -45,7 +48,7 @@ int	dining_philosopher(t_data *data)
 		if (philos[i].pid < 0)
 		{
 			while (++j < i)
-				kill(philos[i].pid, SIGKILL);
+				kill(philos[j].pid, SIGKILL);
 			return (EXIT_FAILURE);
 		}
 		if (philos[i].pid == 0)

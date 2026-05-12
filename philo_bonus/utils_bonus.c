@@ -31,8 +31,6 @@ void	ft_usleep(long time_in_ms, t_data *data)
 	start_time = get_time_in_ms();
 	while ((get_time_in_ms() - start_time) < time_in_ms)
 	{
-		// if (get_death_flag(data))
-		// 	break ;
 		usleep(500);
 	}
 }
