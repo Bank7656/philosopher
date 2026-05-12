@@ -8,7 +8,6 @@ int init_semaphore(t_data *data)
 	sem_unlink(FORK_SEM_NAME);
 	sem_unlink(PRINT_SEM_NAME);
 	sem_unlink(MEAL_SEM_NAME);
-	sem_unlink(THROTTLE_SEM_NAME);
 	data->forks_sem = sem_open(FORK_SEM_NAME, O_CREAT, 0644, fork_num);
 	if (data->forks_sem == SEM_FAILED)
 		return (1);
@@ -17,12 +16,6 @@ int init_semaphore(t_data *data)
 		return (1);
 	data->meal_sem = sem_open(MEAL_SEM_NAME, O_CREAT, 0644, 1);
 	if (data->meal_sem == SEM_FAILED)
-		return (1);
-	if (fork_num > 1)
-		data->throttle_sem = sem_open(THROTTLE_SEM_NAME, O_CREAT, 0644, fork_num / 2);
-	else
-		data->throttle_sem = sem_open(THROTTLE_SEM_NAME, O_CREAT, 0644, 1);
-	if (data->throttle_sem == SEM_FAILED)
 		return (1);
 	return (0);
 }

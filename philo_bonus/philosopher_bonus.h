@@ -19,7 +19,6 @@
 # define FORK_SEM_NAME		"/fork_sem"
 # define PRINT_SEM_NAME		"/print_sem"
 # define MEAL_SEM_NAME		"/meal_sem"
-# define THROTTLE_SEM_NAME	"/throttle_sem"
 # define PICKING_MSG		"has taken a fork"
 # define EATING_MSG			"is eating"
 # define SLEEPING_MSG		"is sleeping"
@@ -64,7 +63,6 @@ typedef struct s_data
 	sem_t			*forks_sem;
 	sem_t			*print_sem;
 	sem_t			*meal_sem;
-	sem_t			*throttle_sem;
 	t_philo			*philos;
 }   t_data;
 

@@ -35,18 +35,18 @@ void    *monitor(void *arg)
 void    routine(t_philo *philo)
 {
     if (philo->id % 2 == 0)
-        ft_usleep(philo->data->time_to_eat / 2, philo->data);
+        ft_usleep(philo->data->time_to_eat, philo->data);
+    else if (philo->id == philo->data->num_philos && philo->data->num_philos % 2 != 0)
+        ft_usleep(philo->data->time_to_eat * 1.5, philo->data);
     while(true)
     {
         // Picking fork
-        sem_wait(philo->data->throttle_sem);
         sem_wait(philo->data->forks_sem);
         print_status(philo, PICKING_MSG);
         if (philo->data->num_philos == 1)
         {
             ft_usleep(philo->data->time_to_die + 10, philo->data);
             sem_post(philo->data->forks_sem);
-            sem_post(philo->data->throttle_sem);
             while (true)
                 usleep(1000);
         }
@@ -60,7 +60,6 @@ void    routine(t_philo *philo)
             sem_post(philo->data->meal_sem);
             sem_post(philo->data->forks_sem);
             sem_post(philo->data->forks_sem);
-            sem_post(philo->data->throttle_sem);
             while (true)
                 usleep(1000);
         }
@@ -74,7 +73,6 @@ void    routine(t_philo *philo)
 
         sem_post(philo->data->forks_sem);
         sem_post(philo->data->forks_sem);
-        sem_post(philo->data->throttle_sem);
 
         if (philo->data->max_meals > 0 && philo->meals_eaten >= philo->data->max_meals)
             break;
@@ -96,10 +94,16 @@ static void	thinking(t_philo *philo)
 	print_status(philo, THINKING_MSG);
 	if (philo->data->num_philos % 2 != 0)
 	{
+		think_time = (time_to_eat * 2) - time_to_sleep;
+		if (think_time < 0)
+			think_time = 0;
+		ft_usleep(think_time, philo->data);
+	}
+	else
+	{
 		think_time = time_to_eat - time_to_sleep;
 		if (think_time < 0)
 			think_time = 0;
-		think_time += 5;
 		ft_usleep(think_time, philo->data);
 	}
 }
