@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 00:57:15 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/06 00:58:10 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/05/13 20:32:12 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	*routine(void *args)
 		release_fork(philo);
 		print_status(philo, SLEEPING_MSG);
 		ft_usleep(philo->data->time_to_sleep, philo->data);
+		if (get_death_flag(philo->data))
+			return (NULL);
 		thinking(philo);
 	}
 	return (NULL);
@@ -90,6 +92,8 @@ static void	thinking(t_philo *philo)
 
 static void	eating(t_philo *philo)
 {
+	if (get_death_flag(philo->data))
+		return ;
 	pthread_mutex_lock(&philo->meal_lock);
 	philo->last_meal_time = get_time_in_ms();
 	philo->meals_eaten++;
@@ -100,6 +104,8 @@ static void	eating(t_philo *philo)
 
 static void	picking_fork(t_philo *philo)
 {
+	if (get_death_flag(philo->data))
+		return ;
 	if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_lock(philo -> left_fork);
@@ -119,6 +125,8 @@ static void	picking_fork(t_philo *philo)
 
 static void	release_fork(t_philo *philo)
 {
+	if (get_death_flag(philo->data))
+		return ;
 	if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_unlock(philo->right_fork);
