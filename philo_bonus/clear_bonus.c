@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clear_bonus.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/20 20:28:04 by thacharo          #+#    #+#             */
+/*   Updated: 2026/05/20 20:28:36 by thacharo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher_bonus.h"
 
-void    clear_resource(t_data *data)
+void	clear_resource(t_data *data)
 {
 	if (data->forks_sem != NULL && data->forks_sem != SEM_FAILED)
 	{

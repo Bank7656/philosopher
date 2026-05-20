@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/20 20:38:41 by thacharo          #+#    #+#             */
+/*   Updated: 2026/05/20 20:39:44 by thacharo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher_bonus.h"
 
 void	wait_all_child(t_data *data);
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-	t_data  data;
+	t_data	data;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -28,7 +40,6 @@ int main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	}
 	wait_all_child(&data);
-	clear_resource(&data);
 	return (EXIT_SUCCESS);
 }
 
@@ -75,9 +86,10 @@ void	wait_all_child(t_data *data)
 			if (WEXITSTATUS(status) == 1)
 			{
 				kill_all_child(data);
-				break;
+				break ;
 			}
 		}
 		i++;
 	}
+	clear_resource(data);
 }

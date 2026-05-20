@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosopher.h                                      :+:      :+:    :+:   */
+/*   philosopher_bonus.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 01:09:17 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/06 13:34:13 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/05/20 20:35:56 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define FORK_SEM_NAME		"/fork_sem"
 # define PRINT_SEM_NAME		"/print_sem"
 # define MEAL_SEM_NAME		"/meal_sem"
+# define TABLE_SEM_NAME		"/table_sem"
 # define PICKING_MSG		"has taken a fork"
 # define EATING_MSG			"is eating"
 # define SLEEPING_MSG		"is sleeping"
@@ -63,6 +64,7 @@ typedef struct s_data
 	sem_t			*forks_sem;
 	sem_t			*print_sem;
 	sem_t			*meal_sem;
+	sem_t			*table_sem;
 	t_philo			*philos;
 }   t_data;
 
@@ -74,6 +76,7 @@ int			dining_philosopher(t_data *data);
 void		clear_resource(t_data *data);
 void		kill_all_child(t_data *data);
 void		philosopher(t_philo *philo);
+void		*monitor(void *arg);
 void		print_status(t_philo *philo, char *msg);
 
 int			ft_atoi(const char *nptr);
