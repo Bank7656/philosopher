@@ -20,6 +20,12 @@ void    clear_resource(t_data *data)
 		data->meal_sem = NULL;
 		sem_unlink(MEAL_SEM_NAME);
 	}
+	if (data->table_sem != NULL && data->table_sem != SEM_FAILED)
+	{
+		sem_close(data->table_sem);
+		data->table_sem = NULL;
+		sem_unlink(TABLE_SEM_NAME);
+	}
 }
 
 void	kill_all_child(t_data *data)

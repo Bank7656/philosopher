@@ -8,6 +8,7 @@ int init_semaphore(t_data *data)
 	sem_unlink(FORK_SEM_NAME);
 	sem_unlink(PRINT_SEM_NAME);
 	sem_unlink(MEAL_SEM_NAME);
+	sem_unlink(TABLE_SEM_NAME);
 	data->forks_sem = sem_open(FORK_SEM_NAME, O_CREAT, 0644, fork_num);
 	if (data->forks_sem == SEM_FAILED)
 		return (1);
@@ -16,6 +17,9 @@ int init_semaphore(t_data *data)
 		return (1);
 	data->meal_sem = sem_open(MEAL_SEM_NAME, O_CREAT, 0644, 1);
 	if (data->meal_sem == SEM_FAILED)
+		return (1);
+	data->table_sem = sem_open(TABLE_SEM_NAME, O_CREAT, 0644, fork_num / 2);
+	if (data->table_sem == SEM_FAILED)
 		return (1);
 	return (0);
 }
@@ -31,6 +35,7 @@ int	init_philos(t_data *data)
 		return (EXIT_FAILURE);
 	data->forks_sem = NULL;
 	data->print_sem = NULL;
+	data->table_sem = NULL;
 	i = 0;
 	while (i < n)
 	{

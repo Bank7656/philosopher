@@ -7,7 +7,6 @@ void    *monitor(void *arg)
     t_philo     *philo;
     long long   death_timestamp;
     long long   current_last_meal;
-    int         current_meal;
     long long   current_time;
 
     philo = (t_philo *)arg;
@@ -15,7 +14,6 @@ void    *monitor(void *arg)
     {
         sem_wait(philo->data->meal_sem);
         current_last_meal = philo->last_meal_time;
-        current_meal = philo->meals_eaten;
         sem_post(philo->data->meal_sem);
         current_time = get_time_in_ms();
         if (current_time - current_last_meal > philo->data->time_to_die)
@@ -25,8 +23,6 @@ void    *monitor(void *arg)
 		    printf("%lld %d died\n", death_timestamp, philo->id);
             exit(EXIT_FAILURE);
         }
-        if (philo->data->max_meals > 0 && current_meal >= philo->data->max_meals)
-            exit(EXIT_SUCCESS);
         usleep(1000);
     }
     return (NULL);
@@ -41,12 +37,14 @@ void    routine(t_philo *philo)
     while(true)
     {
         // Picking fork
+        sem_wait(philo->data->table_sem);
         sem_wait(philo->data->forks_sem);
         print_status(philo, PICKING_MSG);
         if (philo->data->num_philos == 1)
         {
             ft_usleep(philo->data->time_to_die + 10, philo->data);
             sem_post(philo->data->forks_sem);
+            sem_post(philo->data->table_sem);
             while (true)
                 usleep(1000);
         }
@@ -60,6 +58,7 @@ void    routine(t_philo *philo)
             sem_post(philo->data->meal_sem);
             sem_post(philo->data->forks_sem);
             sem_post(philo->data->forks_sem);
+            sem_post(philo->data->table_sem);
             while (true)
                 usleep(1000);
         }
@@ -73,6 +72,7 @@ void    routine(t_philo *philo)
 
         sem_post(philo->data->forks_sem);
         sem_post(philo->data->forks_sem);
+        sem_post(philo->data->table_sem);
 
         if (philo->data->max_meals > 0 && philo->meals_eaten >= philo->data->max_meals)
             break;
