@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 01:09:17 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/20 20:35:56 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/05/22 15:31:31 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ typedef struct s_data
 	sem_t			*meal_sem;
 	sem_t			*table_sem;
 	t_philo			*philos;
-}   t_data;
-
+}	t_data;
 
 int			parse_args(t_data *data, char **argv);
 int			init_semaphore(t_data *data);
