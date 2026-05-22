@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 00:57:15 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/22 15:42:48 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/05/22 16:07:08 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	thinking(t_philo *philo)
 	think_time = 0;
 	time_to_eat = philo->data->time_to_eat;
 	time_to_sleep = philo->data->time_to_sleep;
-	print_status(philo, "is thinking");
+	print_status(philo, THINKING_MSG);
 	if (philo->data->num_philos % 2 == 0)
 	{
 		if (time_to_eat > time_to_sleep)
