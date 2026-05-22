@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 00:57:15 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/13 20:32:12 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/05/22 15:42:48 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,6 @@ static void	picking_fork(t_philo *philo)
 
 static void	release_fork(t_philo *philo)
 {
-	if (get_death_flag(philo->data))
-		return ;
 	if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_unlock(philo->right_fork);
