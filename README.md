@@ -21,7 +21,6 @@ The project is divided into two distinct architectures:
 | **Destruction** | `pthread_mutex_destroy()`| `sem_close()` | Cleans up the resource. `pthread_mutex_destroy` destroys the mutex object. `sem_close` closes the named semaphore for the calling process. |
 | **System Cleanup** | *N/A (Handled by destroy)*| `sem_unlink()` | Removes the named semaphore from the system. Required for semaphores to ensure they don't persist in the OS after the program exits. |
 
----
 
 ## **Instructions**
 
@@ -87,7 +86,6 @@ Run a simulation with 4 philosophers, where the simulation stops after everyone 
 
 * **Dining Philosopher Solution using Semaphores:** [GeeksforGeeks Guide](https://www.geeksforgeeks.org/operating-systems/dining-philosopher-problem-using-semaphores/)
 
----
 
 ## AI Usage Declaration
 
