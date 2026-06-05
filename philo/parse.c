@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 01:01:00 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/06 01:01:01 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/05 13:22:22 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int	check_input_limits(t_data *data, char **argv);
 
 int	parse_args(t_data *data, char **argv)
 {
+	memset(data, 0, sizeof(*data));
 	if (check_args_digit(argv + 1))
 		return (EXIT_FAILURE);
 	data->num_philos = ft_atoi(argv[1]);

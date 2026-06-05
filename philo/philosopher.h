@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 01:09:17 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/06 13:34:13 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/05 13:22:44 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <limits.h>
 # include <stdbool.h>
 # include <stdio.h>
+# include <string.h>
 # include <stdlib.h>
 # include <pthread.h>
 # include <unistd.h>
