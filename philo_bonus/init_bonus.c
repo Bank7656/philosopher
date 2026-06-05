@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 20:28:41 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/20 20:28:55 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/05 14:01:51 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ int	init_semaphore(t_data *data)
 	data->meal_sem = sem_open(MEAL_SEM_NAME, O_CREAT, 0644, 1);
 	if (data->meal_sem == SEM_FAILED)
 		return (1);
-	data->table_sem = sem_open(TABLE_SEM_NAME, O_CREAT, 0644, fork_num / 2);
+	if (fork_num < 2)
+		data->table_sem = sem_open(TABLE_SEM_NAME, O_CREAT, 0644, 1);
+	else
+		data->table_sem = sem_open(TABLE_SEM_NAME, O_CREAT, 0644, fork_num / 2);
 	if (data->table_sem == SEM_FAILED)
 		return (1);
 	return (0);
