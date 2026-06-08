@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 MANDATORY_HEADER = philosopher_bonus.h
 MANDATORY_HEADER_DIR = ./
