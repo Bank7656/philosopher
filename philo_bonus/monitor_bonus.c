@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 20:34:36 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/20 20:35:08 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/08 13:26:36 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*monitor(void *arg)
 		{
 			sem_wait(philo->data->print_sem);
 			death_timestamp = current_time - philo->data->start_time;
-			printf("%lld %d died\n", death_timestamp, philo->id);
+			printf("%lld %d %s\n", death_timestamp, philo->id, DYING_MSG);
 			exit(EXIT_FAILURE);
 		}
 		usleep(1000);

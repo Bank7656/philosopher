@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 01:09:17 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/22 15:31:31 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/08 13:26:41 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define EATING_MSG			"is eating"
 # define SLEEPING_MSG		"is sleeping"
 # define THINKING_MSG		"is thinking"
-# define DYING_MSG			"is died"
+# define DYING_MSG			"died"
 # define ERR_INIT			"Error: Failed to initialize philosophers.\n"
 # define ERR_NUM_ARGS		"Error: Invalid number of arguments.\n"
 # define ERR_INVALID_ARGS	"Error: Invalid argument values provided.\n"
