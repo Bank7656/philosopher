@@ -12,6 +12,26 @@
 
 #include "philosopher_bonus.h"
 
+static int	init_meal_sems(t_data *data);
+
+static int	init_meal_sems(t_data *data)
+{
+	int		i;
+	char	name[20];
+
+	i = 0;
+	while (i < data->num_philos)
+	{
+		ft_make_sem_name(name, i);
+		sem_unlink(name);
+		data->philos[i].meal_sem = sem_open(name, O_CREAT, 0644, 1);
+		if (data->philos[i].meal_sem == SEM_FAILED)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	init_semaphore(t_data *data)
 {
 	unsigned int	fork_num;
@@ -19,7 +39,6 @@ int	init_semaphore(t_data *data)
 	fork_num = data->num_philos;
 	sem_unlink(FORK_SEM_NAME);
 	sem_unlink(PRINT_SEM_NAME);
-	sem_unlink(MEAL_SEM_NAME);
 	sem_unlink(TABLE_SEM_NAME);
 	data->forks_sem = sem_open(FORK_SEM_NAME, O_CREAT, 0644, fork_num);
 	if (data->forks_sem == SEM_FAILED)
@@ -27,8 +46,7 @@ int	init_semaphore(t_data *data)
 	data->print_sem = sem_open(PRINT_SEM_NAME, O_CREAT, 0644, 1);
 	if (data->print_sem == SEM_FAILED)
 		return (1);
-	data->meal_sem = sem_open(MEAL_SEM_NAME, O_CREAT, 0644, 1);
-	if (data->meal_sem == SEM_FAILED)
+	if (init_meal_sems(data))
 		return (1);
 	if (fork_num < 2)
 		data->table_sem = sem_open(TABLE_SEM_NAME, O_CREAT, 0644, 1);
@@ -56,6 +74,7 @@ int	init_philos(t_data *data)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].meals_eaten = 0;
+		data->philos[i].meal_sem = NULL;
 		data->philos[i].data = data;
 		i++;
 	}

@@ -18,7 +18,7 @@
 
 # define FORK_SEM_NAME		"/fork_sem"
 # define PRINT_SEM_NAME		"/print_sem"
-# define MEAL_SEM_NAME		"/meal_sem"
+# define MEAL_SEM_BASE		"/meal_sem_"
 # define TABLE_SEM_NAME		"/table_sem"
 # define PICKING_MSG		"has taken a fork"
 # define EATING_MSG			"is eating"
@@ -50,6 +50,7 @@ typedef struct s_philo
 	int				meals_eaten;
 	long long		last_meal_time;
 	pthread_t		thread_id;
+	sem_t			*meal_sem;
 	struct s_data	*data;
 }	t_philo;
 
@@ -63,7 +64,6 @@ typedef struct s_data
 	long long		start_time;
 	sem_t			*forks_sem;
 	sem_t			*print_sem;
-	sem_t			*meal_sem;
 	sem_t			*table_sem;
 	t_philo			*philos;
 }	t_data;
@@ -82,5 +82,6 @@ int			ft_atoi(const char *nptr);
 int			ft_isdigit(int c);
 void		ft_usleep(long time_in_ms, t_data *data);
 long long	get_time_in_ms(void);
+void		ft_make_sem_name(char *buf, int n);
 
 #endif

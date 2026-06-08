@@ -22,11 +22,11 @@ void	*monitor(void *arg)
 	philo = (t_philo *)arg;
 	while (true)
 	{
-		sem_wait(philo->data->meal_sem);
+		sem_wait(philo->meal_sem);
 		current_last_meal = philo->last_meal_time;
-		sem_post(philo->data->meal_sem);
 		current_time = get_time_in_ms();
-		if (current_time - current_last_meal > philo->data->time_to_die)
+		sem_post(philo->meal_sem);
+		if (current_time - current_last_meal >= philo->data->time_to_die)
 		{
 			sem_wait(philo->data->print_sem);
 			death_timestamp = current_time - philo->data->start_time;

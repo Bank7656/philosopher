@@ -81,15 +81,14 @@ void	wait_all_child(t_data *data)
 	while (i < data->num_philos)
 	{
 		waitpid(-1, &status, 0);
-		if (WIFEXITED(status))
+		if (WIFEXITED(status) && WEXITSTATUS(status) == EXIT_FAILURE)
 		{
-			if (WEXITSTATUS(status) == 1)
-			{
-				kill_all_child(data);
-				break ;
-			}
+			kill_all_child(data);
+			break ;
 		}
 		i++;
 	}
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+		;
 	clear_resource(data);
 }

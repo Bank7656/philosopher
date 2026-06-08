@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 20:29:20 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/20 20:35:04 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/08 15:16:40 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ static void	picking_fork(t_philo *philo)
 
 static void	eating(t_philo *philo)
 {
-	sem_wait(philo->data->meal_sem);
-	if (get_time_in_ms() - philo->last_meal_time > philo->data->time_to_die)
+	sem_wait(philo->meal_sem);
+	if (get_time_in_ms() - philo->last_meal_time >= philo->data->time_to_die)
 	{
-		sem_post(philo->data->meal_sem);
+		sem_post(philo->meal_sem);
 		sem_post(philo->data->forks_sem);
 		sem_post(philo->data->forks_sem);
 		sem_post(philo->data->table_sem);
@@ -70,7 +70,7 @@ static void	eating(t_philo *philo)
 	}
 	philo->last_meal_time = get_time_in_ms();
 	philo->meals_eaten++;
-	sem_post(philo->data->meal_sem);
+	sem_post(philo->meal_sem);
 	print_status(philo, EATING_MSG);
 	ft_usleep(philo->data->time_to_eat, philo->data);
 	sem_post(philo->data->forks_sem);
@@ -89,7 +89,7 @@ static void	thinking(t_philo *philo)
 	print_status(philo, THINKING_MSG);
 	if (philo->data->num_philos % 2 != 0)
 	{
-		think_time = (time_to_eat * 2) - time_to_sleep;
+		think_time = (time_to_eat * 2) - time_to_sleep - 5;
 		if (think_time < 0)
 			think_time = 0;
 		ft_usleep(think_time, philo->data);
