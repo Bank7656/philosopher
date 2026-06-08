@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 01:02:43 by thacharo          #+#    #+#             */
-/*   Updated: 2026/06/05 23:26:08 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/08 13:18:37 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	report_death(t_philo *philo)
 		philo->data->is_dead = 1;
 		pthread_mutex_unlock(&philo->data->dead_lock);
 		death_timestamp = get_time_in_ms() - philo->data->start_time;
-		printf("%lld %d died\n", death_timestamp, philo->id);
+		printf("%lld %d %s\n", death_timestamp, philo->id, DYING_MSG);
 	}
 	pthread_mutex_unlock(&philo->data->write_lock);
 }
