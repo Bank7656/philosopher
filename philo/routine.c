@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 00:57:15 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/22 16:07:08 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/08 12:12:28 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,45 +49,34 @@ void	*routine(void *args)
 /*
 ** Calculates dynamic delay to synchronize threads and prevent deadlocks.
 **
-** 1. Shift Rotation (Reason: Prevents holding single forks hostage)
-** - Even: Thinks for (eat - sleep) to yield to the other half of the table.
-** - Odd: Thinks for (eat * 2 - sleep) to yield to BOTH neighboring shifts.
-**
-** 2. Drift Mitigation (Reason: Eliminates OS context-switch lag)
-** - Subtracts 5ms to wake up early and wait directly in the mutex queue,
-** guaranteeing instant lock acquisition the millisecond forks drop.
-**
-** 3. Safety Cap (Reason: Survives the strict 10ms death limit)
-** - Caps sleep at (die / 2) so a thread never gets trapped in a massive
-** sleep cycle and misses reporting its own starvation.
+** Even philos: Thinks for (eat - sleep) - 5 to yield to the other half.
+** Odd philos: Uses absolute timing (last_meal + ttd - 5) so each cycle
+** self-corrects for drift accumulated in eating/sleeping ft_usleep calls.
+** The -5ms in both branches is the pre-queue margin to enter the mutex
+** wait list before neighboring forks drop.
+** Even branch is capped at (die / 2) as a safety bound.
 */
 static void	thinking(t_philo *philo)
 {
-	long long	time_to_eat;
-	long long	time_to_sleep;
 	long long	think_time;
+	long long	death_deadline;
 
-	think_time = 0;
-	time_to_eat = philo->data->time_to_eat;
-	time_to_sleep = philo->data->time_to_sleep;
 	print_status(philo, THINKING_MSG);
 	if (philo->data->num_philos % 2 == 0)
 	{
-		if (time_to_eat > time_to_sleep)
-			think_time = time_to_eat - time_to_sleep;
-	}
-	else
-		think_time = (time_to_eat * 2) - time_to_sleep;
-	if (think_time > 5)
-		think_time -= 5;
-	else
-		think_time = 0;
-	if (think_time > 0)
-	{
+		think_time = philo->data->time_to_eat - philo->data->time_to_sleep - 5;
 		if (think_time > philo->data->time_to_die / 2)
 			think_time = philo->data->time_to_die / 2;
-		ft_usleep(think_time, philo->data);
 	}
+	else
+	{
+		pthread_mutex_lock(&philo->meal_lock);
+		death_deadline = philo->last_meal_time + philo->data->time_to_die;
+		think_time =  death_deadline - 5 - get_time_in_ms();
+		pthread_mutex_unlock(&philo->meal_lock);
+	}
+	if (think_time > 0)
+		ft_usleep(think_time, philo->data);
 }
 
 static void	eating(t_philo *philo)
@@ -95,6 +84,11 @@ static void	eating(t_philo *philo)
 	if (get_death_flag(philo->data))
 		return ;
 	pthread_mutex_lock(&philo->meal_lock);
+	if (get_time_in_ms() - philo->last_meal_time >= philo->data->time_to_die)
+	{
+		pthread_mutex_unlock(&philo->meal_lock);
+		return ;
+	}
 	philo->last_meal_time = get_time_in_ms();
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->meal_lock);

@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 00:59:50 by thacharo          #+#    #+#             */
-/*   Updated: 2026/05/06 00:59:50 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/06 01:33:10 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	ft_usleep(long time_in_ms, t_data *data)
 	{
 		if (get_death_flag(data))
 			break ;
-		usleep(500);
+		usleep(100);
 	}
 }
 
