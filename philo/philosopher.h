@@ -73,6 +73,7 @@ void		clear_resource(t_data *data);
 
 void		set_death_flag(t_data *data);
 int			get_death_flag(t_data *data);
+int			is_philo_full(t_philo *philo);
 
 int			ft_atoi(const char *nptr);
 int			ft_isdigit(int c);

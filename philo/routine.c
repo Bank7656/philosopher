@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 00:57:15 by thacharo          #+#    #+#             */
-/*   Updated: 2026/06/08 12:14:59 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/08 12:35:04 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ void	*routine(void *args)
 		picking_fork(philo);
 		eating(philo);
 		release_fork(philo);
+		if (is_philo_full(philo))
+			return (NULL);
 		print_status(philo, SLEEPING_MSG);
 		ft_usleep(philo->data->time_to_sleep, philo->data);
-		if (get_death_flag(philo->data))
-			return (NULL);
 		thinking(philo);
 	}
 	return (NULL);
@@ -61,6 +61,8 @@ static void	thinking(t_philo *philo)
 	long long	think_time;
 	long long	death_deadline;
 
+	if (get_death_flag(philo->data))
+		return ;
 	print_status(philo, THINKING_MSG);
 	if (philo->data->num_philos % 2 == 0)
 	{

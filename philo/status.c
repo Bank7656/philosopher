@@ -28,3 +28,15 @@ int	get_death_flag(t_data *data)
 	pthread_mutex_unlock(&data->dead_lock);
 	return (status);
 }
+
+int	is_philo_full(t_philo *philo)
+{
+	int	full;
+
+	if (philo->data->max_meals == -1)
+		return (0);
+	pthread_mutex_lock(&philo->meal_lock);
+	full = (philo->meals_eaten >= philo->data->max_meals);
+	pthread_mutex_unlock(&philo->meal_lock);
+	return (full);
+}

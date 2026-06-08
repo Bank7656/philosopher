@@ -44,23 +44,17 @@ void	monitor_routine(t_data *data)
 static int	all_philos_full(t_data *data)
 {
 	int	i;
-	int	finish_eating_count;
 
 	if (data->max_meals == -1)
 		return (0);
 	i = 0;
-	finish_eating_count = 0;
 	while (i < data->num_philos)
 	{
-		pthread_mutex_lock(&data->philos[i].meal_lock);
-		if (data->philos[i].meals_eaten >= data->max_meals)
-			finish_eating_count++;
-		pthread_mutex_unlock(&data->philos[i].meal_lock);
+		if (!is_philo_full(&data->philos[i]))
+			return (0);
 		i++;
 	}
-	if (finish_eating_count == data->num_philos)
-		return (1);
-	return (0);
+	return (1);
 }
 
 static void	report_death(t_philo *philo)
@@ -83,6 +77,8 @@ static int	is_philo_died(t_philo *philo)
 {
 	long long	time_elasped;
 
+	if (is_philo_full(philo))
+		return (0);
 	pthread_mutex_lock(&philo->meal_lock);
 	time_elasped = get_time_in_ms() - philo->last_meal_time;
 	pthread_mutex_unlock(&philo->meal_lock);
