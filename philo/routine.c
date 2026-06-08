@@ -6,7 +6,7 @@
 /*   By: thacharo <thacharo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 00:57:15 by thacharo          #+#    #+#             */
-/*   Updated: 2026/06/08 12:12:28 by thacharo         ###   ########.fr       */
+/*   Updated: 2026/06/08 12:14:59 by thacharo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	thinking(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->meal_lock);
 		death_deadline = philo->last_meal_time + philo->data->time_to_die;
-		think_time =  death_deadline - 5 - get_time_in_ms();
+		think_time = death_deadline - 5 - get_time_in_ms();
 		pthread_mutex_unlock(&philo->meal_lock);
 	}
 	if (think_time > 0)
